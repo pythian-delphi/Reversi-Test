@@ -11,8 +11,6 @@
 #7
 #8
 #
-
-const BoardSize = 8
 function initBoard()
         board = zeros(Int32, BoardSize, BoardSize)
         board[4,4] = 1
@@ -43,12 +41,48 @@ function displayBoard( board )
         end
 end
 
-function putStone( board, stone, pos )
-        directionArray = { [1,0], [1,1], [-1,0], [-1,-1], [0,-1], [1,-1] }
-        #dump( direction )
-        cnt, board = turnDirection( board, stone, pos, directionArray[1] )
-        println( cnt )
-        displayBoard( board )
+function countStone( board, stone )
+        count = 0
+        for line in board
+                for stone in line
+                        if ( stone == 0 )
+                                count += 1
+                        end
+                end
+        end
+        return count
+end
+
+function isContinue( board )
+        num = countStone( board, 0 )
+        ret = true
+        if( count == 0 )
+                ret = false
+        end
+        return ret
+end
+
+function isPuttable( board, stone, position )
+        cnt, newBoard = putStone( board, stone, position )
+        ret = true
+        if( cnt > 0 )
+                ret = true
+        else
+                ret = false
+        end
+        return ret
+end
+
+function putStone( board, stone, position )
+        sum = 0
+        newBoard = copy(board)
+        for dir in directionArray
+                cnt, newBoard = turnDirection( newBoard, stone, position, dir )
+                sum += cnt
+        end
+        #println( sum )
+        #displayBoard( newBoard )
+        return sum, newBoard
 end
 
 function turnDirection( board, stone, position, direction )
@@ -121,7 +155,3 @@ function isBoarder( position )
         end
         return ret
 end
-
-#function isPuttable( board, stone, position )
-#        return true
-#end
