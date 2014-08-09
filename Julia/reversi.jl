@@ -24,23 +24,15 @@ putStone( board, 1, [3,4] )
 putStone( board, 1, [3,3] )
 putStone( board, 1, [3,5] )
 
-getNextMove( board, 1 )
-getNextMove( board, -1 )
+println( convertToString(getNextMove( board, 1 )) )
+println( convertToString(getNextMove( board, -1 )) )
+println( convertToString(getNextMove( board, -1 )) )
+println( convertToString(getNextMove( board, -1 )) )
 
 # Select Opposite stone
-selectedStone = 0
-while( true )
-        println(STDOUT, "black(0) or white(1) ?")
-        #selectedStone = int(input())
-        selectedStone = int(read(STDIN,Char)) - int('0')
-        #print( selectedStone )
-        if( (selectedStone == 0) || (selectedStone == 1) )
-                break
-        end
-end
-oppStone = (selectedStone == 0) ? 1 : -1
+oppStone = selectPlayerStone()
 ownStone = -1 * oppStone
-println( ownStone )
+println( "comp stone =", ownStone )
 
 # Game
 turnStone = -1
@@ -48,11 +40,28 @@ while( isContinue(board) )
         #numOfMoves;
         if( turnStone == ownStone )
                 # Own turn
+                if( isPass(board, ownStone) )
+                        println("Com's turn is pass.")
+                else
+                        ownMove = getNextMove(board, ownStone)
+                        num, board = putStone(board, ownStone, ownMove)
+                end
         elseif( turnStone == oppStone )
                 # Opposite turn
-                println("input move.  example: a5")
-                line = read(STDIN,Char[2])
-                println(line)
+                if( isPass(board, oppStone) )
+                        println("Your turn is pass.")
+                else
+                        oppMove = getNextMove(board, oppStone)
+                        num, board = putStone(board, oppStone, oppMove)
+                end
+                #println("input move.  example: a5")
+                # #line = read(STDIN,Char[2])
+                #line = readline(STDIN)
+                #dump( line )
+                ##println(line)
+                #print( int(line[1]) - int('a') + 1 )
+                #print( int(line[2]) - int('0') )
+                #break
         else
                 @assert false
         end
@@ -60,13 +69,18 @@ while( isContinue(board) )
 end
 
 # Result
-numOfOwnStones = countStone( board, ownStone )
-numOfOppStones = countStone( board, oppStone )
-if( numOfOwnStones > numOfOppStones )
-        println( "You lose." )
-elseif( numOfOwnStones < numOfOppStones )
+println( sum(board) )
+if( sum(board) * ownStone > 0 )
+        println( "You lose. " )
+elseif( sum(board) * oppStone > 0 )
         println( "You win." )
 else
+        @assert (sum(board) == 0)
         println( "Even." )
 end
+
+numOfBlack = countStone( board, -1 )
+numOfWhite = countStone( board, +1 )
+println( "Black= ", numOfBlack )
+println( "White= ", numOfWhite )
 

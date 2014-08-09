@@ -44,8 +44,8 @@ end
 function countStone( board, stone )
         count = 0
         for line in board
-                for stone in line
-                        if ( stone == 0 )
+                for val in line
+                        if ( val == stone )
                                 count += 1
                         end
                 end
@@ -56,24 +56,26 @@ end
 function isContinue( board )
         num = countStone( board, 0 )
         ret = true
-        if( count == 0 )
+        if( num == 0 )
                 ret = false
         end
         return ret
 end
 
 function isPuttable( board, stone, position )
-        cnt, newBoard = putStone( board, stone, position )
-        ret = true
-        if( cnt > 0 )
-                ret = true
-        else
-                ret = false
+        ret = false
+        if( checkStone(board, position) )
+                cnt, newBoard = putStone( board, stone, position )
+                if( cnt > 0 )
+                        ret = true
+                end
         end
         return ret
 end
 
 function putStone( board, stone, position )
+        @assert checkStone(board, position)
+
         sum = 0
         newBoard = copy(board)
         for dir in directionArray
@@ -141,8 +143,8 @@ function changeStone( board, stone, position )
         board[position[2], position[1]] = stone
 end
 
-function checkStone( board, stone, position )
-        return ( getStone(position) == 0 )
+function checkStone( board, position )
+        return ( getStone(board, position) == 0 )
 end
 
 function isBoarder( position )
@@ -153,5 +155,29 @@ function isBoarder( position )
         if( (position[2] < 1) || (position[2] > BoardSize ) )
                 ret = true
         end
+        return ret
+end
+
+function getMoveList(board, stone)
+        moveList = {}
+        for x in 1:BoardSize
+                for y in 1: BoardSize
+                        move = [x,y]
+                        if ( isPuttable(board, stone, move) )
+                                append!( moveList, {move} )
+                        end
+                end
+        end
+        dump( moveList )
+        return moveList
+end
+
+function isPass(board, stone)
+        ret = false
+        moveList = getMoveList(board, stone)
+        if( length(moveList) == 0 )
+                ret = true
+        end
+
         return ret
 end

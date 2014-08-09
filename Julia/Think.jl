@@ -1,13 +1,6 @@
 function getNextMove(board, stone)
-        moveList = {}
-        for x in 1:BoardSize
-                for y in 1: BoardSize
-                        move = [x,y]
-                        if ( isPuttable(board, stone, move) )
-                                append!( moveList, {move} )
-                        end
-                end
-        end
+        moveList = getMoveList(board, stone)
+        shuffle!( moveList )
         dump( moveList )
-        return moveList
+        return moveList[1]
 end
