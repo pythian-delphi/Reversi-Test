@@ -14,54 +14,48 @@
 import ReversiCore
 using ReversiCore
 
+# Initialize
 board = initBoard()
 displayBoard( board )
-putStone( board, -1, [3,4] )
-putStone( board, -1, [3,3] )
-putStone( board, -1, [3,5] )
-
-putStone( board, 1, [3,4] )
-putStone( board, 1, [3,3] )
-putStone( board, 1, [3,5] )
-
-println( convertToString(getNextMove( board, 1 )) )
-println( convertToString(getNextMove( board, -1 )) )
-println( convertToString(getNextMove( board, -1 )) )
-println( convertToString(getNextMove( board, -1 )) )
 
 # Select Opposite stone
 oppStone = selectPlayerStone()
 ownStone = -1 * oppStone
-println( "comp stone =", ownStone )
+println("Your stone =", oppStone)
+println("comp stone =", ownStone)
 
 # Game
-turnStone = -1
+turnStone = -1  # Black
 while( isContinue(board) )
         #numOfMoves;
         if( turnStone == ownStone )
                 # Own turn
                 if( isPass(board, ownStone) )
-                        println("Com's turn is pass.")
+                        println("Com's turn is pass.\n")
                 else
                         ownMove = getNextMove(board, ownStone)
                         num, board = putStone(board, ownStone, ownMove)
+                        # Display
+                        dispOwnMove = convertToString( ownMove )
+                        println( "Com Move = ", dispOwnMove )
+                        displayBoard( board )
+                        println("")
                 end
         elseif( turnStone == oppStone )
                 # Opposite turn
                 if( isPass(board, oppStone) )
-                        println("Your turn is pass.")
+                        println("Your turn is pass.\n")
                 else
-                        oppMove = getNextMove(board, oppStone)
+                        oppMove = getPlayerMove(board, oppStone)
+                        #oppMove = getNextMove(board, oppStone) # Debug
                         num, board = putStone(board, oppStone, oppMove)
+
+                        # Display
+                        dispOppMove = convertToString( oppMove )
+                        println( "Your Move = ", dispOppMove )
+                        displayBoard( board )
+                        println("")
                 end
-                #println("input move.  example: a5")
-                # #line = read(STDIN,Char[2])
-                #line = readline(STDIN)
-                #dump( line )
-                ##println(line)
-                #print( int(line[1]) - int('a') + 1 )
-                #print( int(line[2]) - int('0') )
-                #break
         else
                 @assert false
         end
@@ -69,18 +63,21 @@ while( isContinue(board) )
 end
 
 # Result
-println( sum(board) )
+oppColor = (oppStone == 1) ? "White" : "Black"
+resultString = ""
 if( sum(board) * ownStone > 0 )
-        println( "You lose. " )
+        resultString = string("You(", oppColor, ") lose. " )
 elseif( sum(board) * oppStone > 0 )
-        println( "You win." )
+        resultString = string("You(", oppColor, ") win. " )
 else
         @assert (sum(board) == 0)
-        println( "Even." )
+        resultString = "Even"
 end
+println( resultString )
 
 numOfBlack = countStone( board, -1 )
 numOfWhite = countStone( board, +1 )
+@assert ((numOfBlack + numOfWhite) == (BoardSize * BoardSize))
 println( "Black= ", numOfBlack )
 println( "White= ", numOfWhite )
 

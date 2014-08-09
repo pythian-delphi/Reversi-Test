@@ -30,11 +30,12 @@ function selectPlayerStone()
 end
 
 function convertToString(move)
-        a = int('a') + move[2] - 1
-        n = int('0') + move[1]
+        a = int('a') + move[1] - 1
+        n = int('0') + move[2]
         str = string(char(a), char(n))
         return str
 end
+
 function convertToMove(line)
         dump( line )
         println(line)
@@ -42,25 +43,21 @@ function convertToMove(line)
         move2 = int(line[2]) - int('0')
         return [move2, move1]
 end
-function getPlayerMove(board)
-        #println("input move.  example: a5")
-        # #line = read(STDIN,Char[2])
-        #line = readline(STDIN)
 
-        selectedStone = 0
+function getPlayerMove(board, stone)
+        move = [0,0]
         while( true )
                 println(STDOUT, "input move.  example: a5")
-                #selectedStone = int(input())
-                #selectedStone = int(read(STDIN,Char)) - int('0')
                 line = readline(STDIN)
                 dump( line )
-                selectedStone = line[1] - int('0')
-                println( selectedStone )
-                if( (selectedStone == 0) || (selectedStone == 1) )
+                move[1] = line[1] - int('a') + 1
+                move[2] = line[2] - int('0')
+                if( isPuttable(board, stone, move) )
                         break
+                else
+                        println("You cannot put.\n")
                 end
         end
-        oppStone = (selectedStone == 1) ? 1 : -1
-        return oppStone
+        return move
 end
 

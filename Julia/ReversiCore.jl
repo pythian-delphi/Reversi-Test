@@ -1,4 +1,6 @@
 module ReversiCore
+
+export BoardSize
 export initBoard, displayBoard, countStone, isContinue, putStone, isPuttable, getMoveList, isPass
 export selectPlayerStone, convertToString, convertToMove, getPlayerMove
 export getNextMove

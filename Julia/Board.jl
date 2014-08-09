@@ -21,11 +21,11 @@ function initBoard()
 end
 
 function displayBoard( board )
-        println(" abcdefgh")
+        println("  abcdefgh")
         cnt = 1
         for i in 1:BoardSize
                 boardLine = board[i,:]
-                print(i)
+                print(i, " ")
                 for stone in boardLine
                         if(stone == 0)
                                 print(" ")
@@ -144,7 +144,13 @@ function changeStone( board, stone, position )
 end
 
 function checkStone( board, position )
-        return ( getStone(board, position) == 0 )
+        ret = false
+        if( !isBoarder(position) )
+                if( getStone(board, position) == 0 )
+                        ret = true
+                end
+        end
+        return ret
 end
 
 function isBoarder( position )
@@ -168,7 +174,7 @@ function getMoveList(board, stone)
                         end
                 end
         end
-        dump( moveList )
+        #dump( moveList )
         return moveList
 end
 
